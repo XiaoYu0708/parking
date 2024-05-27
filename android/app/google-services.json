@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "554632598417",
+    "project_id": "parking-cce55",
+    "storage_bucket": "parking-cce55.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:554632598417:android:526c0e9a0fcdb00e984030",
+        "android_client_info": {
+          "package_name": "com.xiaoyu.parking"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA13m6fpDItUIyShVAJ6nnB0Yu-ZEKY3po"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
