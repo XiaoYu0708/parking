@@ -227,18 +227,24 @@ class _ProfileState extends State<Profile> {
                         ...value.map((i) {
                           return Column(
                             children: [
-                              ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (builder) => VideoPLay(
-                                          videoPath: i,
+                              Card(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: ListTile(
+                                    title: Text(i),
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (builder) => VideoPLay(
+                                            videoPath: i,
+                                          ),
                                         ),
-                                      ),
-                                    );
-                                  },
-                                  child: Text(i)),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
                               const Divider(),
                             ],
                           );
