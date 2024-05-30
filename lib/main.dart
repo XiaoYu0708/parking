@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:parking/video_play.dart';
+import 'package:video_player/video_player.dart';
 import 'firebase_options.dart';
+import 'firebase_storage_helper.dart';
 import 'firestore_helper.dart';
 
 Future<void> main() async {
@@ -145,6 +148,9 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  ValueNotifier<List> myImages = ValueNotifier([]);
+  ValueNotifier<List> myVideos = ValueNotifier([]);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -171,6 +177,76 @@ class _ProfileState extends State<Profile> {
               await firestoreHelper.getData(path: 'users');
             },
             child: const Text("讀取資料"),
+          ),
+          const Divider(),
+          Title(
+            color: Colors.black,
+            child: const Text('Storage'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              FirebaseStorageHelper firebaseStorageHelper =
+                  FirebaseStorageHelper();
+              myImages.value = await firebaseStorageHelper.getAllImages();
+            },
+            child: const Text('get images'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              FirebaseStorageHelper firebaseStorageHelper =
+                  FirebaseStorageHelper();
+              myVideos.value = await firebaseStorageHelper.getAllVideos();
+            },
+            child: const Text('get videos'),
+          ),
+          ValueListenableBuilder(
+            valueListenable: myImages,
+            builder: (BuildContext context, List value, Widget? child) {
+              return value != []
+                  ? Column(
+                      children: [
+                        ...value.map((i) {
+                          return Column(
+                            children: [
+                              Image.network(i),
+                              const Divider(),
+                            ],
+                          );
+                        }),
+                      ],
+                    )
+                  : const SizedBox();
+            },
+          ),
+          ValueListenableBuilder(
+            valueListenable: myVideos,
+            builder: (BuildContext context, List value, Widget? child) {
+              return value != []
+                  ? Column(
+                      children: [
+                        ...value.map((i) {
+                          return Column(
+                            children: [
+                              ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (builder) => VideoPLay(
+                                          videoPath: i,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: Text(i)),
+                              const Divider(),
+                            ],
+                          );
+                        }),
+                      ],
+                    )
+                  : const SizedBox();
+            },
           ),
         ],
       ),
