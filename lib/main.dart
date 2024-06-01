@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:parking/video_play.dart';
-import 'package:video_player/video_player.dart';
 import 'firebase_options.dart';
 import 'firebase_storage_helper.dart';
 import 'firestore_helper.dart';
@@ -22,9 +21,11 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        brightness: Brightness.light,
         useMaterial3: true,
       ),
       darkTheme: ThemeData(
+        brightness: Brightness.dark,
         useMaterial3: true,
       ),
       home: const Menu(),
@@ -51,7 +52,6 @@ class _MenuState extends State<Menu> {
       ),
       body: [
         const Home(),
-        const Parking(),
         const Profile(),
       ][bottomNavigationBarIndex],
       bottomNavigationBar: NavigationBar(
@@ -63,8 +63,6 @@ class _MenuState extends State<Menu> {
         },
         destinations: const [
           NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
-          NavigationDestination(
-              icon: Icon(Icons.local_parking), label: 'Parking'),
           NavigationDestination(icon: Icon(Icons.person), label: 'Profile'),
         ],
       ),
@@ -95,26 +93,60 @@ class _HomeState extends State<Home> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Container(
-                    color: Colors.grey,
-                    height: 150,
-                    width: 150,
+              TextButton(
+                style: ButtonStyle(
+                  shape: WidgetStateProperty.all(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (builder) => const Parking(),
+                    ),
+                  );
+                },
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Container(
+                      color: Colors.grey,
+                      height: 130,
+                      width: 130,
+                    ),
                   ),
                 ),
               ),
               const SizedBox(
                 width: 10,
               ),
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Container(
-                    color: Colors.grey,
-                    height: 150,
-                    width: 150,
+              TextButton(
+                style: ButtonStyle(
+                  shape: WidgetStateProperty.all(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (builder) => const Parking(),
+                    ),
+                  );
+                },
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Container(
+                      color: Colors.grey,
+                      height: 130,
+                      width: 130,
+                    ),
                   ),
                 ),
               ),
