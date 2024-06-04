@@ -51,7 +51,7 @@ class _MenuState extends State<Menu> {
       ),
       body: [
         const Map(),
-        const MyParking(),
+        const Parking(),
       ][bottomNavigationBarIndex],
       bottomNavigationBar: NavigationBar(
         selectedIndex: bottomNavigationBarIndex,
@@ -96,8 +96,48 @@ class _MapState extends State<Map> {
   }
 }
 
+class Parking extends StatefulWidget {
+  const Parking({super.key});
+
+  @override
+  State<Parking> createState() => _ParkingState();
+}
+
+class _ParkingState extends State<Parking> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: ListView(
+        children: [
+          ListTile(
+            title: const Text("Khare_testvideo"),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (builder) =>
+                      const MyParking(name: "Khare_testvideo"),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            title: const Text("Khare_testvideo2"),
+            onTap: () {},
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class MyParking extends StatefulWidget {
-  const MyParking({super.key});
+  final String name;
+
+  const MyParking({
+    super.key,
+    required this.name,
+  });
 
   @override
   State<MyParking> createState() => _MyParkingState();
@@ -109,6 +149,9 @@ class _MyParkingState extends State<MyParking> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.name),
+      ),
       body: myImages.value != []
           ? ValueListenableBuilder(
               valueListenable: myImages,
@@ -146,7 +189,7 @@ class _MyParkingState extends State<MyParking> {
     // TODO: implement didChangeDependencies
     FirestoreHelper firestoreHelper = FirestoreHelper();
 
-    await firestoreHelper.getData(path: "Khare_testvideo");
+    await firestoreHelper.getData(path: widget.name);
 
     myImages.value = firestoreHelper.images;
 
