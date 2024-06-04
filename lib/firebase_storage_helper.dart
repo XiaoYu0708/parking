@@ -4,9 +4,9 @@ class FirebaseStorageHelper {
   final storageRef = FirebaseStorage.instance.ref();
   late List allImages = [];
 
-  getAllImages(path) async {
+  getAllImages(parkingName, path) async {
     final listResult =
-        await storageRef.child('yolov8/Khare_testvideo/$path/images').listAll();
+        await storageRef.child('yolov8/$parkingName/$path/images').listAll();
 
     for (var item in listResult.items) {
       String itemFullPath = item.fullPath;

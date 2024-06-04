@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:parking/parking_item.dart';
 import 'firebase_options.dart';
-import 'firebase_storage_helper.dart';
 import 'firestore_helper.dart';
 
 Future<void> main() async {

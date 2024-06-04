@@ -31,9 +31,9 @@ class FirestoreHelper {
           images.add(
             MyImageDB(
               id: doc.id,
-              total_space: doc.data()['total_space'],
-              occupied_space: doc.data()['occupied_space'],
-              empty_space: doc.data()['empty_space'],
+              totalSpace: doc.data()['total_space'],
+              occupiedSpace: doc.data()['occupied_space'],
+              emptySpace: doc.data()['empty_space'],
             ),
           );
         }
@@ -47,14 +47,14 @@ class FirestoreHelper {
 
 class MyImageDB {
   String id;
-  int total_space;
-  int occupied_space;
-  int empty_space;
+  int totalSpace;
+  int occupiedSpace;
+  int emptySpace;
 
   MyImageDB({
     required this.id,
-    required this.total_space,
-    required this.occupied_space,
-    required this.empty_space,
+    required this.totalSpace,
+    required this.occupiedSpace,
+    required this.emptySpace,
   });
 }

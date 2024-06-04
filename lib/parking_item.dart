@@ -39,9 +39,9 @@ class _ParkingItemState extends State<ParkingItem> {
                     );
                   },
                 ),
-                Text("總車位：${widget.image.total_space.toString()}"),
-                Text("已停放：${widget.image.occupied_space.toString()}"),
-                Text("剩餘車位：${widget.image.empty_space.toString()}"),
+                Text("總車位：${widget.image.totalSpace.toString()}"),
+                Text("已停放：${widget.image.occupiedSpace.toString()}"),
+                Text("剩餘車位：${widget.image.emptySpace.toString()}"),
               ],
             )
           : const Center(
@@ -54,7 +54,7 @@ class _ParkingItemState extends State<ParkingItem> {
   Future<void> didChangeDependencies() async {
     // TODO: implement didChangeDependencies
 
-    await firebaseStorageHelper.getAllImages(widget.image.id);
+    await firebaseStorageHelper.getAllImages('Khare_testvideo',widget.image.id);
 
     myImages.value = firebaseStorageHelper.allImages;
 
