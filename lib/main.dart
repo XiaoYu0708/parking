@@ -51,8 +51,8 @@ class _MenuState extends State<Menu> {
         centerTitle: true,
       ),
       body: [
-        const Home(),
-        const Profile(),
+        const Map(),
+        const MyParking(),
       ][bottomNavigationBarIndex],
       bottomNavigationBar: NavigationBar(
         selectedIndex: bottomNavigationBarIndex,
@@ -62,22 +62,22 @@ class _MenuState extends State<Menu> {
           });
         },
         destinations: const [
-          NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
-          NavigationDestination(icon: Icon(Icons.person), label: 'Profile'),
+          NavigationDestination(icon: Icon(Icons.map), label: 'Map'),
+          NavigationDestination(icon: Icon(Icons.local_parking), label: 'Parking'),
         ],
       ),
     );
   }
 }
 
-class Home extends StatefulWidget {
-  const Home({super.key});
+class Map extends StatefulWidget {
+  const Map({super.key});
 
   @override
-  State<Home> createState() => _HomeState();
+  State<Map> createState() => _MapState();
 }
 
-class _HomeState extends State<Home> {
+class _MapState extends State<Map> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,6 +90,42 @@ class _HomeState extends State<Home> {
               child: Image.asset("assets/images/main_map.png"),
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class Parking extends StatefulWidget {
+  const Parking({super.key});
+
+  @override
+  State<Parking> createState() => _ParkingState();
+}
+
+class _ParkingState extends State<Parking> {
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
+  }
+}
+
+class MyParking extends StatefulWidget {
+  const MyParking({super.key});
+
+  @override
+  State<MyParking> createState() => _MyParkingState();
+}
+
+class _MyParkingState extends State<MyParking> {
+  ValueNotifier<List> myImages = ValueNotifier([]);
+  ValueNotifier<List> myVideos = ValueNotifier([]);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: ListView(
+        children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -151,43 +187,7 @@ class _HomeState extends State<Home> {
                 ),
               ),
             ],
-          )
-        ],
-      ),
-    );
-  }
-}
-
-class Parking extends StatefulWidget {
-  const Parking({super.key});
-
-  @override
-  State<Parking> createState() => _ParkingState();
-}
-
-class _ParkingState extends State<Parking> {
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
-}
-
-class Profile extends StatefulWidget {
-  const Profile({super.key});
-
-  @override
-  State<Profile> createState() => _ProfileState();
-}
-
-class _ProfileState extends State<Profile> {
-  ValueNotifier<List> myImages = ValueNotifier([]);
-  ValueNotifier<List> myVideos = ValueNotifier([]);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: ListView(
-        children: [
+          ),
           ElevatedButton(
             onPressed: () {
               FirestoreHelper firestoreHelper = FirestoreHelper();
