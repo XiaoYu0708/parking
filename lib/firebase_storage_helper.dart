@@ -1,33 +1,33 @@
 import 'package:firebase_storage/firebase_storage.dart';
 
-class FirebaseStorageHelper{
+class FirebaseStorageHelper {
   final storageRef = FirebaseStorage.instance.ref();
+  late List allImages = [];
 
-  getAllImages() async {
-    final listResult = await storageRef.child('images').listAll();
-
-    List myItemsFullPath = [];
+  getAllImages(path) async {
+    final listResult =
+        await storageRef.child('yolov8/Khare_testvideo/$path/images').listAll();
 
     for (var item in listResult.items) {
       String itemFullPath = item.fullPath;
       String imageUrl = await storageRef.child(itemFullPath).getDownloadURL();
-      myItemsFullPath.add(imageUrl);
+      allImages.add(MyImage(
+        name: path,
+        fullPath: item.fullPath,
+        imageUrl: imageUrl,
+      ));
     }
-
-    return myItemsFullPath;
   }
+}
 
-  getAllVideos() async{
-    final listResult = await storageRef.child('videos').listAll();
+class MyImage {
+  String name;
+  String fullPath;
+  String imageUrl;
 
-    List myItemsFullPath = [];
-
-    for (var item in listResult.items) {
-      String itemFullPath = item.fullPath;
-      String videoUrl = await storageRef.child(itemFullPath).getDownloadURL();
-      myItemsFullPath.add(videoUrl);
-    }
-
-    return myItemsFullPath;
-  }
+  MyImage({
+    required this.name,
+    required this.fullPath,
+    required this.imageUrl,
+  });
 }

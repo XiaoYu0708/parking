@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:parking/video_play.dart';
+import 'package:parking/parking_item.dart';
 import 'firebase_options.dart';
 import 'firebase_storage_helper.dart';
 import 'firestore_helper.dart';
@@ -63,7 +63,8 @@ class _MenuState extends State<Menu> {
         },
         destinations: const [
           NavigationDestination(icon: Icon(Icons.map), label: 'Map'),
-          NavigationDestination(icon: Icon(Icons.local_parking), label: 'Parking'),
+          NavigationDestination(
+              icon: Icon(Icons.local_parking), label: 'Parking'),
         ],
       ),
     );
@@ -96,20 +97,6 @@ class _MapState extends State<Map> {
   }
 }
 
-class Parking extends StatefulWidget {
-  const Parking({super.key});
-
-  @override
-  State<Parking> createState() => _ParkingState();
-}
-
-class _ParkingState extends State<Parking> {
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
-}
-
 class MyParking extends StatefulWidget {
   const MyParking({super.key});
 
@@ -119,175 +106,53 @@ class MyParking extends StatefulWidget {
 
 class _MyParkingState extends State<MyParking> {
   ValueNotifier<List> myImages = ValueNotifier([]);
-  ValueNotifier<List> myVideos = ValueNotifier([]);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextButton(
-                style: ButtonStyle(
-                  shape: WidgetStateProperty.all(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (builder) => const Parking(),
-                    ),
-                  );
-                },
-                child: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Container(
-                      color: Colors.grey,
-                      height: 130,
-                      width: 130,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              TextButton(
-                style: ButtonStyle(
-                  shape: WidgetStateProperty.all(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (builder) => const Parking(),
-                    ),
-                  );
-                },
-                child: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Container(
-                      color: Colors.grey,
-                      height: 130,
-                      width: 130,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          ElevatedButton(
-            onPressed: () {
-              FirestoreHelper firestoreHelper = FirestoreHelper();
-
-              var data = <String, dynamic>{
-                "first": "Ada",
-                "last": "Lovelace",
-                "born": 1815
-              };
-
-              firestoreHelper.addData(data: data, path: 'users');
-            },
-            child: const Text("新增資料"),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              FirestoreHelper firestoreHelper = FirestoreHelper();
-
-              await firestoreHelper.getData(path: 'users');
-            },
-            child: const Text("讀取資料"),
-          ),
-          const Divider(),
-          Title(
-            color: Colors.black,
-            child: const Text('Storage'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              FirebaseStorageHelper firebaseStorageHelper =
-                  FirebaseStorageHelper();
-              myImages.value = await firebaseStorageHelper.getAllImages();
-            },
-            child: const Text('get images'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              FirebaseStorageHelper firebaseStorageHelper =
-                  FirebaseStorageHelper();
-              myVideos.value = await firebaseStorageHelper.getAllVideos();
-            },
-            child: const Text('get videos'),
-          ),
-          ValueListenableBuilder(
-            valueListenable: myImages,
-            builder: (BuildContext context, List value, Widget? child) {
-              return value != []
-                  ? Column(
-                      children: [
-                        ...value.map((i) {
-                          return Column(
-                            children: [
-                              Image.network(i),
-                              const Divider(),
-                            ],
-                          );
-                        }),
-                      ],
-                    )
-                  : const SizedBox();
-            },
-          ),
-          ValueListenableBuilder(
-            valueListenable: myVideos,
-            builder: (BuildContext context, List value, Widget? child) {
-              return value != []
-                  ? Column(
-                      children: [
-                        ...value.map((i) {
-                          return Column(
-                            children: [
-                              Card(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ListTile(
-                                    title: Text(i),
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (builder) => VideoPLay(
-                                            videoPath: i,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
-                              const Divider(),
-                            ],
-                          );
-                        }),
-                      ],
-                    )
-                  : const SizedBox();
-            },
-          ),
-        ],
-      ),
+      body: myImages.value != []
+          ? ValueListenableBuilder(
+              valueListenable: myImages,
+              builder: (BuildContext context, value, Widget? child) {
+                return ListView.separated(
+                  itemBuilder: (BuildContext context, int index) {
+                    return ListTile(
+                      title: Text(value[index].id),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (builder) => ParkingItem(
+                              image: value[index],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                  separatorBuilder: (BuildContext context, int index) =>
+                      const Divider(),
+                  itemCount: myImages.value.length,
+                );
+              },
+            )
+          : const Center(
+              child: Text('載入中...'),
+            ),
     );
+  }
+
+  @override
+  Future<void> didChangeDependencies() async {
+    // TODO: implement didChangeDependencies
+    FirestoreHelper firestoreHelper = FirestoreHelper();
+
+    await firestoreHelper.getData(path: "Khare_testvideo");
+
+    myImages.value = firestoreHelper.images;
+
+    setState(() {});
+
+    super.didChangeDependencies();
   }
 }
