@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:parking/parking_item.dart';
 import 'firebase_options.dart';
 import 'firestore_helper.dart';
+import 'package:http/http.dart' as http;
 
 Future<void> main() async {
   runApp(const MyApp());
@@ -27,21 +30,19 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.dark,
         useMaterial3: true,
       ),
-      home: const Menu(),
+      home: const MainPage(),
     );
   }
 }
 
-class Menu extends StatefulWidget {
-  const Menu({super.key});
+class MainPage extends StatefulWidget {
+  const MainPage({super.key});
 
   @override
-  State<Menu> createState() => _MenuState();
+  State<MainPage> createState() => _MainPageState();
 }
 
-class _MenuState extends State<Menu> {
-  int bottomNavigationBarIndex = 0;
-
+class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,38 +50,6 @@ class _MenuState extends State<Menu> {
         title: const Text('停車場'),
         centerTitle: true,
       ),
-      body: [
-        const Map(),
-        const Parking(),
-      ][bottomNavigationBarIndex],
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: bottomNavigationBarIndex,
-        onDestinationSelected: (value) {
-          setState(() {
-            bottomNavigationBarIndex = value;
-          });
-        },
-        destinations: const [
-          NavigationDestination(icon: Icon(Icons.map), label: 'Map'),
-          NavigationDestination(
-              icon: Icon(Icons.local_parking), label: 'Parking'),
-        ],
-      ),
-    );
-  }
-}
-
-class Map extends StatefulWidget {
-  const Map({super.key});
-
-  @override
-  State<Map> createState() => _MapState();
-}
-
-class _MapState extends State<Map> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
       body: ListView(
         padding: const EdgeInsets.all(10),
         children: [
@@ -90,6 +59,7 @@ class _MapState extends State<Map> {
               child: Image.asset("assets/images/main_map.png"),
             ),
           ),
+          const Parking(),
         ],
       ),
     );
@@ -104,30 +74,53 @@ class Parking extends StatefulWidget {
 }
 
 class _ParkingState extends State<Parking> {
+  List<dynamic> data = [];
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ListView(
-        children: [
-          ListTile(
-            title: const Text("Khare_testvideo"),
+    return Column(
+      children: [
+        ...data.map((value) {
+          return ListTile(
+            title: Text(value),
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (builder) =>
-                      const MyParking(name: "Khare_testvideo"),
+                  builder: (builder) => MyParking(name: value),
                 ),
               );
             },
-          ),
-          ListTile(
-            title: const Text("Khare_testvideo2"),
-            onTap: () {},
-          ),
-        ],
-      ),
+          );
+        }),
+      ],
     );
+  }
+
+  Future<void> fetchData() async {
+    try {
+      final response = await http.get(
+        Uri.parse(
+          'https://raw.githubusercontent.com/XiaoYu0708/XiaoYu0708/main/parking.json',
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        setState(() {
+          data = json.decode(response.body)['data'];
+        });
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } on Exception catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    fetchData();
+    super.didChangeDependencies();
   }
 }
 
@@ -165,6 +158,7 @@ class _MyParkingState extends State<MyParking> {
                           context,
                           MaterialPageRoute(
                             builder: (builder) => ParkingItem(
+                              parkName: widget.name,
                               image: value[index],
                             ),
                           ),

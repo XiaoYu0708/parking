@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'firebase_storage_helper.dart';
 
 class ParkingItem extends StatefulWidget {
+  final String parkName;
   final dynamic image;
 
   const ParkingItem({
     super.key,
+    required this.parkName,
     required this.image,
   });
 
@@ -54,7 +56,7 @@ class _ParkingItemState extends State<ParkingItem> {
   Future<void> didChangeDependencies() async {
     // TODO: implement didChangeDependencies
 
-    await firebaseStorageHelper.getAllImages('Khare_testvideo',widget.image.id);
+    await firebaseStorageHelper.getAllImages(widget.parkName, widget.image.id);
 
     myImages.value = firebaseStorageHelper.allImages;
 
