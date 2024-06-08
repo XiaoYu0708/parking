@@ -30,8 +30,74 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.dark,
         useMaterial3: true,
       ),
-      home: const MainPage(),
+      home: const Loading(),
     );
+  }
+}
+
+class Loading extends StatefulWidget {
+  const Loading({super.key});
+
+  @override
+  State<Loading> createState() => _LoadingState();
+}
+
+class _LoadingState extends State<Loading> {
+  final PageController _pageController = PageController(
+    initialPage: 0,
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: PageView(
+          physics: const NeverScrollableScrollPhysics(),
+          scrollDirection: Axis.vertical,
+          controller: _pageController,
+          children: const [
+            Icon(
+              Icons.car_repair,
+              size: 100,
+            ),
+            Hero(
+              tag: 'titleIcon',
+              child: Icon(
+                Icons.local_parking,
+                size: 100,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    Future.delayed(const Duration(milliseconds: 500)).then(
+      (_) {
+        _pageController
+            .animateToPage(
+              1,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.linear,
+            )
+            .then(
+              (_) => Future.delayed(const Duration(milliseconds: 500)).then(
+                (_) {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (builder) => const MainPage()),
+                    (_) => false,
+                  );
+                },
+              ),
+            );
+      },
+    );
+    super.initState();
   }
 }
 
@@ -47,7 +113,19 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('停車場'),
+        title: const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Hero(
+              tag: 'titleIcon',
+              child: Icon(
+                Icons.local_parking,
+                size: 30,
+              ),
+            ),
+            Text('停車場'),
+          ],
+        ),
         centerTitle: true,
       ),
       body: ListView(
@@ -81,16 +159,32 @@ class _ParkingState extends State<Parking> {
     return Column(
       children: [
         ...data.map((value) {
-          return ListTile(
-            title: Text(value),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (builder) => MyParking(name: value),
+          return Card(
+            child: ListTile(
+              leading: Hero(
+                tag: value,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 48, 102, 176),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Icon(
+                    Icons.local_parking,
+                    color: Colors.white,
+                    size: 50,
+                  ),
                 ),
-              );
-            },
+              ),
+              title: Text(value),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (builder) => MyParking(name: value),
+                  ),
+                );
+              },
+            ),
           );
         }),
       ],
@@ -143,7 +237,23 @@ class _MyParkingState extends State<MyParking> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.name),
+        title: ListTile(
+          leading: Hero(
+            tag: widget.name,
+            child: Container(
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 48, 102, 176),
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: const Icon(
+                Icons.local_parking,
+                color: Colors.white,
+                size: 30,
+              ),
+            ),
+          ),
+          title: Text(widget.name),
+        ),
       ),
       body: myImages.value != []
           ? ValueListenableBuilder(
