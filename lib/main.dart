@@ -117,11 +117,13 @@ class _MainPageState extends State<MainPage> {
         title: const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Hero(
-              tag: 'titleIcon',
-              child: Icon(
-                Icons.local_parking,
-                size: 30,
+            Card(
+              child: Hero(
+                tag: 'titleIcon',
+                child: Icon(
+                  Icons.local_parking,
+                  size: 30,
+                ),
               ),
             ),
             Text('停車場'),
