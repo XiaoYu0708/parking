@@ -132,12 +132,10 @@ class _MainPageState extends State<MainPage> {
       body: ListView(
         padding: const EdgeInsets.all(10),
         children: [
-          Card(
-            child: WidgetZoom(
-              heroAnimationTag: 'tag',
-              zoomWidget: Image.asset(
-                'assets/images/main_map.png',
-              ),
+          WidgetZoom(
+            heroAnimationTag: 'tag',
+            zoomWidget: Image.asset(
+              'assets/images/main_map.png',
             ),
           ),
           const Parking(),
