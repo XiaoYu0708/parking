@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:widget_zoom/widget_zoom.dart';
 import 'firebase_storage_helper.dart';
 
 class ParkingItem extends StatefulWidget {
@@ -16,7 +17,6 @@ class ParkingItem extends StatefulWidget {
 }
 
 class _ParkingItemState extends State<ParkingItem> {
-  FirebaseStorageHelper firebaseStorageHelper = FirebaseStorageHelper();
   ValueNotifier<List> myImages = ValueNotifier([]);
 
   @override
@@ -34,16 +34,29 @@ class _ParkingItemState extends State<ParkingItem> {
                   builder: (BuildContext context, value, Widget? child) {
                     return Column(
                       children: [
-                        Image.network(
-                          value[myImages.value.length - 1].imageUrl,
+                        WidgetZoom(
+                          heroAnimationTag: 'tag',
+                          zoomWidget: Image.network(
+                            value[myImages.value.length - 1].imageUrl,
+                          ),
                         ),
+                        const Divider(),
                       ],
                     );
                   },
                 ),
-                Text("總車位：${widget.image.totalSpace.toString()}"),
-                Text("已停放：${widget.image.occupiedSpace.toString()}"),
-                Text("剩餘車位：${widget.image.emptySpace.toString()}"),
+                Text(
+                  "總車位：${widget.image.totalSpace.toString()}",
+                  style: const TextStyle(fontSize: 20),
+                ),
+                Text(
+                  "已停放：${widget.image.occupiedSpace.toString()}",
+                  style: const TextStyle(fontSize: 20),
+                ),
+                Text(
+                  "剩餘車位：${widget.image.emptySpace.toString()}",
+                  style: const TextStyle(fontSize: 20),
+                ),
               ],
             )
           : const Center(
@@ -55,6 +68,7 @@ class _ParkingItemState extends State<ParkingItem> {
   @override
   Future<void> didChangeDependencies() async {
     // TODO: implement didChangeDependencies
+    FirebaseStorageHelper firebaseStorageHelper = FirebaseStorageHelper();
 
     await firebaseStorageHelper.getAllImages(widget.parkName, widget.image.id);
 

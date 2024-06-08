@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:parking/parking_item.dart';
 import 'package:widget_zoom/widget_zoom.dart';
 import 'firebase_options.dart';
+import 'firebase_storage_helper.dart';
 import 'firestore_helper.dart';
 import 'package:http/http.dart' as http;
 
@@ -140,6 +141,7 @@ class _MainPageState extends State<MainPage> {
               'assets/images/main_map.png',
             ),
           ),
+          const Divider(),
           const Parking(),
         ],
       ),
@@ -258,25 +260,29 @@ class _MyParkingState extends State<MyParking> {
           title: Text(widget.name),
         ),
       ),
-      body: myImages.value != []
+      body: myImages.value.isNotEmpty
           ? ValueListenableBuilder(
               valueListenable: myImages,
               builder: (BuildContext context, value, Widget? child) {
                 return ListView.separated(
                   itemBuilder: (BuildContext context, int index) {
-                    return ListTile(
-                      title: Text(value[index].id),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (builder) => ParkingItem(
-                              parkName: widget.name,
-                              image: value[index],
+                    return Card(
+                      child: ListTile(
+                        leading: Image.network(value[index].imageUrl!),
+                        title: Text(value[index].id),
+                        subtitle: Text("剩餘車位：${value[index].emptySpace}"),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (builder) => ParkingItem(
+                                parkName: widget.name,
+                                image: value[index],
+                              ),
                             ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     );
                   },
                   separatorBuilder: (BuildContext context, int index) =>
@@ -300,8 +306,20 @@ class _MyParkingState extends State<MyParking> {
 
     myImages.value = firestoreHelper.images;
 
+    for (var value in myImages.value) {
+      value.imageUrl = await getFirebaseStorage(value.id);
+    }
+
     setState(() {});
 
     super.didChangeDependencies();
+  }
+
+  Future<String> getFirebaseStorage(id) async {
+    FirebaseStorageHelper firebaseStorageHelper = FirebaseStorageHelper();
+
+    await firebaseStorageHelper.getAllImages(widget.name, id);
+
+    return firebaseStorageHelper.allImages[myImages.value.length - 1].imageUrl;
   }
 }

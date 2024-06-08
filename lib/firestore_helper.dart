@@ -50,6 +50,7 @@ class MyImageDB {
   int totalSpace;
   int occupiedSpace;
   int emptySpace;
+  late String imageUrl;
 
   MyImageDB({
     required this.id,
