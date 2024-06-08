@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:parking/parking_item.dart';
+import 'package:widget_zoom/widget_zoom.dart';
 import 'firebase_options.dart';
 import 'firestore_helper.dart';
 import 'package:http/http.dart' as http;
@@ -132,9 +133,11 @@ class _MainPageState extends State<MainPage> {
         padding: const EdgeInsets.all(10),
         children: [
           Card(
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Image.asset("assets/images/main_map.png"),
+            child: WidgetZoom(
+              heroAnimationTag: 'tag',
+              zoomWidget: Image.asset(
+                'assets/images/main_map.png',
+              ),
             ),
           ),
           const Parking(),
