@@ -261,35 +261,46 @@ class _MyParkingState extends State<MyParking> {
         ),
       ),
       body: myImages.value.isNotEmpty
-          ? ValueListenableBuilder(
-              valueListenable: myImages,
-              builder: (BuildContext context, value, Widget? child) {
-                return ListView.separated(
-                  itemBuilder: (BuildContext context, int index) {
-                    return Card(
-                      child: ListTile(
-                        leading: Image.network(value[index].imageUrl!),
-                        title: Text(value[index].id),
-                        subtitle: Text("剩餘車位：${value[index].emptySpace}"),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (builder) => ParkingItem(
-                                parkName: widget.name,
-                                image: value[index],
-                              ),
+          ? ListView(
+              padding: const EdgeInsets.all(8.0),
+              children: [
+                WidgetZoom(
+                  heroAnimationTag: 'tag',
+                  zoomWidget: Image.asset(
+                    'assets/images/${widget.name}.png',
+                  ),
+                ),
+                const Divider(),
+                ValueListenableBuilder(
+                  valueListenable: myImages,
+                  builder: (BuildContext context, value, Widget? child) {
+                    return Column(
+                      children: [
+                        ...myImages.value.map((value) {
+                          return Card(
+                            child: ListTile(
+                              leading: Image.network(value.imageUrl!),
+                              title: Text(value.id),
+                              subtitle: Text("剩餘車位：${value.emptySpace}"),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (builder) => ParkingItem(
+                                      parkName: widget.name,
+                                      image: value,
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
                           );
-                        },
-                      ),
+                        }),
+                      ],
                     );
                   },
-                  separatorBuilder: (BuildContext context, int index) =>
-                      const Divider(),
-                  itemCount: myImages.value.length,
-                );
-              },
+                ),
+              ],
             )
           : const Center(
               child: Text('載入中...'),
